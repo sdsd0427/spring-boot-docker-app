@@ -4,3 +4,4 @@ Simple Spring Boot REST app for Docker deployment:
 - Build with Maven: mvn package
 - Build Docker: docker build -t springboot-docker .
 - Run: docker run -p 8080:8080 springboot-docker
+// test commit for Jenkins auto build
