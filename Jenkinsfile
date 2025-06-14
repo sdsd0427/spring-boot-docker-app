@@ -2,9 +2,9 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = "springboot-docker"
-        CONTAINER_NAME = "springboot-docker-container"
-        PORT = "8081"
+        IMAGE_NAME = 'springboot-docker'
+        CONTAINER_NAME = 'springboot-docker-container'
+        PORT = '8080'
     }
 
     stages {
@@ -15,25 +15,32 @@ pipeline {
             }
         }
 
+        stage('Build with Maven') {
+            steps {
+                echo '📦 Maven 빌드 중...'
+                sh 'mvn clean package -DskipTests'
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 echo '🔨 Docker 이미지 빌드 중...'
-                sh "docker build -t $IMAGE_NAME ."
+                sh "docker build -t ${IMAGE_NAME} ."
             }
         }
 
         stage('Stop Existing Container') {
             steps {
-                echo '🛑 기존 컨테이너 종료 시도...'
-                sh "docker stop $CONTAINER_NAME || true"
-                sh "docker rm $CONTAINER_NAME || true"
+                echo '🛑 기존 컨테이너 중지 및 삭제'
+                sh "docker stop ${CONTAINER_NAME} || true"
+                sh "docker rm ${CONTAINER_NAME} || true"
             }
         }
 
         stage('Run Docker Container') {
             steps {
-                echo '🚀 Docker 컨테이너 실행'
-                sh "docker run -d --name $CONTAINER_NAME -p $PORT:8080 $IMAGE_NAME"
+                echo '🚀 Docker 컨테이너 실행 중...'
+                sh "docker run -d --name ${CONTAINER_NAME} -p ${PORT}:8080 ${IMAGE_NAME}"
             }
         }
     }
